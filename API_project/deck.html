@@ -7,28 +7,33 @@
     body {
       font-family: Arial, sans-serif;
       text-align: center;
-      background: #202020;
-      color: white;
+      background: #ffffff;
+      color: #000000;
       padding: 2rem;
     }
+
+    h1 {
+      margin-bottom: 2rem;
+    }
+
     button {
       padding: 10px 20px;
       margin: 10px;
       font-size: 16px;
-      border: none;
+      border: 1px solid #ccc;
       border-radius: 5px;
-      background-color: #ff9800;
-      color: black;
+      background-color: #000000;
+      color: white;
       cursor: pointer;
     }
+
     button:hover {
-      background-color: #fb8c00;
+      background-color: #333333;
     }
+
     img {
       margin-top: 20px;
       height: 200px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px #000;
     }
   </style>
 </head>
@@ -53,9 +58,12 @@
 
       const res = await fetch(`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=1`);
       const data = await res.json();
+
       if (data.remaining === 0) {
         alert("No more cards! Please shuffle.");
+        return;
       }
+
       const imgUrl = data.cards[0].image;
       document.getElementById("card").innerHTML = `<img src="${imgUrl}" alt="card">`;
     }
@@ -67,8 +75,7 @@
         return;
       }
 
-      const res = await fetch(`https://deckofcardsapi.com/api/deck/${deckId}/shuffle/`);
-      const data = await res.json();
+      await fetch(`https://deckofcardsapi.com/api/deck/${deckId}/shuffle/`);
       alert("Deck shuffled!");
       document.getElementById("card").innerHTML = "";
     }
