@@ -1,0 +1,76 @@
+
+/*ito ay Global reset*/
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/*Game Board ituu*/
+.board{
+    background-color: #004974; /*darkblue 'yan shea*/
+    width: 100vmax;
+    height: 100vh;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px   ;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.top-row{
+    display: flex;
+    justify-content: flex-start;
+    align-items: space-between;
+    padding: 0 40px;
+}
+
+.tableau{
+    display: flex;
+    justify-content: space-around;
+    padding-top: 20 px;
+}
+
+.pile{
+    width: 80px;
+    height: 120px;
+    border: 2px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    position: relative;
+}
+
+.card{
+    width: 80px;
+    height: 120px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: white;
+    box-shadow: 2px 4px 6px rgba(0,0, 0, 0.4);
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 120px;
+    color: black;
+    user-select: none;
+    transition: transform 0.2s ease;
+}
+
+.card.red{
+    color: crimson;
+}
+
+.card.back{
+    background-color: royalblue;
+    background-image: radial-gradient(circle, #ffffff33 20%, transparent 20%);
+    background-size: 10px 10px;
+    color: transparent;
+    box-shadow: inset 0 0 6px #00000088;
+}
+
+.pile .card + .card{
+    top: 30px;
+}
+
