@@ -111,12 +111,47 @@
     }
 
     async function loadDetails(cat, idx) {
-      const cont = document.getElementById('detailsContainer');
-      cont.innerHTML = '<p>Loading details...</p>';
-      const res = await fetch(`${apiBase}/${cat}/${idx}`);
-      const data = await res.json();
-      cont.innerHTML = `<h2>${data.name || idx}</h2><pre>${JSON.stringify(data, null, 2)}</pre>`;
+  const cont = document.getElementById('detailsContainer');
+  cont.innerHTML = '<p>Loading details...</p>';
+  const res = await fetch(`${apiBase}/${cat}/${idx}`);
+  const data = await res.json();
+
+  const imageUrl = data.image ? `https://www.dnd5eapi.co${data.image}` : null;
+
+  // Helper function to format nested values
+  const renderValue = (val) => {
+    if (Array.isArray(val)) {
+      return `<ul>${val.map(v => `<li>${renderValue(v)}</li>`).join('')}</ul>`;
+    } else if (typeof val === 'object' && val !== null) {
+      return `<ul>${Object.entries(val)
+        .map(([k, v]) => `<li><strong>${k}:</strong> ${renderValue(v)}</li>`)
+        .join('')}</ul>`;
+    } else {
+      return `${val}`;
     }
+  };
+
+  cont.innerHTML = `
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-start;">
+      ${imageUrl ? `<img src="${imageUrl}" alt="${data.name}" style="max-width: 150px; border: 1px solid #ccc; background: #fff; padding: 4px;">` : ''}
+      <div style="flex: 1; min-width: 250px;">
+        <h2>${data.name || idx}</h2>
+        <div>${Object.entries(data)
+          .filter(([key]) => key !== 'name' && key !== 'index' && key !== 'url' && key !== 'image' && key !== 'desc')
+          .map(([key, value]) => `
+            <p><strong>${key.replace(/_/g, ' ')}:</strong> ${renderValue(value)}</p>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+
+    ${data.desc?.length ? `
+      <h3>Description</h3>
+      ${Array.isArray(data.desc) ? data.desc.map(d => `<p>${d}</p>`).join('') : `<p>${data.desc}</p>`}
+    ` : ''}
+  `;
+}
+
 
     document.getElementById('loadBtn').onclick = loadItems;
     loadEndpoints();
