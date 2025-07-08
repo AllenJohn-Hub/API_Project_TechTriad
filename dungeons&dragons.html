@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>D&D 5e API Explorer</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #1e1e2f;
+      color: #f0f0f0;
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 1rem;
+      line-height: 1.5;
+    }
+
+    h1 {
+      text-align: center;
+      color: #ffcc00;
+      margin-bottom: 1rem;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    select, button {
+      font-size: 1rem;
+      padding: 0.5rem;
+      margin: 0.5rem 0;
+      border-radius: 6px;
+      border: none;
+    }
+
+    select {
+      background-color: #2c2c40;
+      color: #fff;
+    }
+
+    button {
+      background-color: #ffcc00;
+      color: #000;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #e6b800;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 1rem;
+    }
+
+    li {
+      padding: 0.5rem;
+      background-color: #2a2a3d;
+      margin-bottom: 4px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    li:hover {
+      background-color: #393954;
+    }
+
+    #detailsContainer {
+      margin-top: 2rem;
+      background-color: #2e2e44;
+      padding: 1rem;
+      border-radius: 6px;
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
+    }
+
+    pre {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-size: 0.9rem;
+      color: #e0e0e0;
+    }
+  </style>
+</head>
+<body>
+  <h1>D&D 5e API Explorer</h1>
+
+  <div>
+    <label for="endpointSelect">Choose a category:</label>
+    <select id="endpointSelect"></select>
+    <button id="loadBtn">Load Items</button>
+  </div>
+
+  <div id="itemsContainer"></div>
+  <div id="detailsContainer"></div>
+
+  <script>
+    const apiBase = 'https://www.dnd5eapi.co/api/2014';
+
+    async function loadEndpoints() {
+      const res = await fetch(apiBase);
+      const data = await res.json();
+      const select = document.getElementById('endpointSelect');
+      for (const key of Object.keys(data)) {
+        const opt = document.createElement('option');
+        opt.value = key;
+        opt.textContent = key;
+        select.appendChild(opt);
+      }
+    }
+
+    async function loadItems() {
+      const cat = document.getElementById('endpointSelect').value;
+      const cont = document.getElementById('itemsContainer');
+      cont.innerHTML = '<p>Loading...</p>';
+      const res = await fetch(`${apiBase}/${cat}`);
+      const data = await res.json();
+      cont.innerHTML = '';
+      const ul = document.createElement('ul');
+      data.results.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = `${item.name} (${item.index})`;
+        li.onclick = () => loadDetails(cat, item.index);
+        ul.appendChild(li);
+      });
+      cont.appendChild(ul);
+    }
+
+    async function loadDetails(cat, idx) {
+      const cont = document.getElementById('detailsContainer');
+      cont.innerHTML = '<p>Loading details...</p>';
+      const res = await fetch(`${apiBase}/${cat}/${idx}`);
+      const data = await res.json();
+      cont.innerHTML = `<h2>${data.name || idx}</h2><pre>${JSON.stringify(data, null, 2)}</pre>`;
+    }
+
+    document.getElementById('loadBtn').onclick = loadItems;
+
+    loadEndpoints();
+  </script>
+</body>
+</html>
