@@ -1,0 +1,8 @@
+1. The homepage (index.html) is clean, organized, and visually engaging. It effectively links users to both features.
+2. The Deck of Cards game works smoothly, with successful API integration, draw and shuffle features.
+3. The Dungeons & Dragons API Explorer is very impressive—dynamic loading, clear layout, and even supports nested JSON display.
+4. Styling via style.css is consistent, responsive, and user-friendly across pages.
+
+Minor Suggestions:
+1. The README.md file does not contain any instructions or description of the project. Including setup steps or a short summary would be helpful for future users or developers.
+2. The text.txt file is empty and doesn’t appear to serve a purpose—consider removing it or replacing it with relevant content.
